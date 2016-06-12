@@ -13,5 +13,22 @@ AC_PROG_CC
 AC_PROG_INSTALL
 AC_PROG_LIBTOOL
 
+AC_EGREP_CPP(we_are_using_clang,
+[
+#include <unistd.h>
+#ifdef __clang__
+we_are_using_clang
+#endif
+],
+[AC_MSG_RESULT([yes])
+IS_CLANG="yes"],
+[AC_MSG_RESULT([no])])
+
+if test x"$IS_CLANG" == x"yes" ; then
+	CFLAGS="$CFLAGS -Wall -Wno-implicit-function-declaration -Wno-unused-value -Wno-unused-function"
+fi
+
+m4_include([m4/libev.m4])
+
 AC_CONFIG_FILES([Makefile])
 AC_OUTPUT

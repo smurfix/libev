@@ -7,6 +7,8 @@ EXTRA_DIST = LICENSE Changes autogen.sh \
 	     ev_epoll.c ev_select.c ev_poll.c ev_kqueue.c ev_port.c ev_win32.c \
 	     ev.3 ev.pod Symbols.ev Symbols.event
 
+AM_CPPFLAGS=-DECB_NO_LIBM
+
 ACLOCAL_AMFLAGS = -I m4
 
 man_MANS = ev.3
