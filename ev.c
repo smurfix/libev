@@ -2464,7 +2464,7 @@ evpipe_write (EV_P_ EV_ATOMIC_T *flag)
       if (evpipe [0] < 0)
         {
           uint64_t counter = 1;
-          if (write (evpipe [1], &counter, sizeof (uint64_t)) != 1) {}
+          if (write (evpipe [1], &counter, sizeof (uint64_t)) != sizeof(uint64_t)) {}
         }
       else
 #endif
