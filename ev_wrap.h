@@ -78,6 +78,9 @@
 #define preparecnt ((loop)->preparecnt)
 #define preparemax ((loop)->preparemax)
 #define prepares ((loop)->prepares)
+#define pthsem_event ((loop)->pthsem_event)
+#define pthsem_stop ((loop)->pthsem_stop)
+#define pthsem_timeout ((loop)->pthsem_timeout)
 #define release_cb ((loop)->release_cb)
 #define rfeedcnt ((loop)->rfeedcnt)
 #define rfeedmax ((loop)->rfeedmax)
@@ -177,6 +180,9 @@
 #undef preparecnt
 #undef preparemax
 #undef prepares
+#undef pthsem_event
+#undef pthsem_stop
+#undef pthsem_timeout
 #undef release_cb
 #undef rfeedcnt
 #undef rfeedmax

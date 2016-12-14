@@ -26,3 +26,9 @@ config.status
 libtool
 stamp-h1
 ev.3
+*.la
+.libs/
+*.o
+*.lo
+*.swp
+ev_wrap.h
