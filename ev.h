@@ -520,6 +520,7 @@ enum {
   EVBACKEND_EPOLL   = 0x00000004U, /* linux */
   EVBACKEND_KQUEUE  = 0x00000008U, /* bsd, broken on osx */
   EVBACKEND_DEVPOLL = 0x00000010U, /* solaris 8 */ /* NYI */
+  EVBACKEND_PTHSEM  = 0x00000010U, /* pthsem hack */
   EVBACKEND_PORT    = 0x00000020U, /* solaris 10 */
   EVBACKEND_ALL     = 0x0000003FU, /* all known backends */
   EVBACKEND_MASK    = 0x0000FFFFU  /* all future backends */

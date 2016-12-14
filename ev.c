@@ -99,6 +99,15 @@
 #  define EV_USE_SELECT 0
 # endif
 
+# if HAVE_PTHSEM
+#  ifndef EV_USE_PTHSEM
+#   define EV_USE_PTHSEM EV_FEATURE_BACKENDS
+#  endif
+# else
+#  undef EV_USE_PTHSEM
+#  define EV_USE_PTHSEM 0
+# endif
+
 # if HAVE_POLL && HAVE_POLL_H
 #  ifndef EV_USE_POLL
 #   define EV_USE_POLL EV_FEATURE_BACKENDS
@@ -211,6 +220,10 @@
 # undef EV_AVOID_STDIO
 #endif
 
+#if HAVE_PTHSEM
+# include <pthsem.h>
+#endif
+
 /* OS X, in its infinite idiocy, actually HARDCODES
  * a limit of 1024 into their select. Where people have brains,
  * OS X engineers apparently have a vacuum. Or maybe they were
@@ -313,6 +326,10 @@
 
 #ifndef EV_USE_PORT
 # define EV_USE_PORT 0
+#endif
+
+#ifndef EV_USE_PTHSEM
+# define EV_USE_PTHSEM 0
 #endif
 
 #ifndef EV_USE_INOTIFY
@@ -2694,6 +2711,9 @@ childcb (EV_P_ ev_signal *sw, int revents)
 #if EV_USE_PORT
 # include "ev_port.c"
 #endif
+#if EV_USE_PTHSEM
+# include "ev_pthsem.c"
+#endif
 #if EV_USE_KQUEUE
 # include "ev_kqueue.c"
 #endif
@@ -2738,6 +2758,7 @@ ev_supported_backends (void) EV_THROW
   unsigned int flags = 0;
 
   if (EV_USE_PORT  ) flags |= EVBACKEND_PORT;
+  if (EV_USE_PTHSEM) flags |= EVBACKEND_PTHSEM;
   if (EV_USE_KQUEUE) flags |= EVBACKEND_KQUEUE;
   if (EV_USE_EPOLL ) flags |= EVBACKEND_EPOLL;
   if (EV_USE_POLL  ) flags |= EVBACKEND_POLL;
@@ -2764,6 +2785,10 @@ ev_recommended_backends (void) EV_THROW
 #endif
 #ifdef __FreeBSD__
   flags &= ~EVBACKEND_POLL;   /* poll return value is unusable (http://forums.freebsd.org/archive/index.php/t-10270.html) */
+#endif
+#ifdef HAVE_PTHSEM
+  /* forget anything else, we need this one */
+  flags = ~EVBACKEND_PTHSEM;
 #endif
 
   return flags;
@@ -2915,6 +2940,9 @@ loop_init (EV_P_ unsigned int flags) EV_THROW
 #if EV_USE_PORT
       if (!backend && (flags & EVBACKEND_PORT  )) backend = port_init   (EV_A_ flags);
 #endif
+#if EV_USE_PTHSEM
+      if (!backend && (flags & EVBACKEND_PTHSEM)) backend = pthsem_init (EV_A_ flags);
+#endif
 #if EV_USE_KQUEUE
       if (!backend && (flags & EVBACKEND_KQUEUE)) backend = kqueue_init (EV_A_ flags);
 #endif
@@ -2994,6 +3022,9 @@ ev_loop_destroy (EV_P)
 #endif
 #if EV_USE_PORT
   if (backend == EVBACKEND_PORT  ) port_destroy   (EV_A);
+#endif
+#if EV_USE_PTHSEM
+  if (backend == EVBACKEND_PTHSEM) pthsem_destroy (EV_A);
 #endif
 #if EV_USE_KQUEUE
   if (backend == EVBACKEND_KQUEUE) kqueue_destroy (EV_A);

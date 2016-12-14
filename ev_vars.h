@@ -80,7 +80,7 @@ VARx(pid_t, curpid)
 
 VARx(char, postfork)  /* true if we need to recreate kernel state after fork */
 
-#if EV_USE_SELECT || EV_GENWRAP
+#if EV_USE_SELECT || EV_USE_PTHSEM || EV_GENWRAP
 VARx(void *, vec_ri)
 VARx(void *, vec_ro)
 VARx(void *, vec_wi)
@@ -89,6 +89,12 @@ VARx(void *, vec_wo)
 VARx(void *, vec_eo)
 #endif
 VARx(int, vec_max)
+#endif
+
+#if EV_USE_PTHSEM || EV_GENWRAP
+VARx(pth_event_t, pthsem_timeout)
+VARx(pth_event_t, pthsem_event)
+VARx(pth_event_t, pthsem_stop)
 #endif
 
 #if EV_USE_POLL || EV_GENWRAP
