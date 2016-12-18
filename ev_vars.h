@@ -94,7 +94,6 @@ VARx(int, vec_max)
 #if EV_USE_PTHSEM || EV_GENWRAP
 VARx(pth_event_t, pthsem_timeout)
 VARx(pth_event_t, pthsem_event)
-VARx(pth_event_t, pthsem_stop)
 #endif
 
 #if EV_USE_POLL || EV_GENWRAP

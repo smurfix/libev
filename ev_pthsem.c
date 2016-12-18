@@ -68,8 +68,6 @@ pthsem_modify (EV_P_ int fd, int oev, int nev)
   }
 }
 
-pth_sem_t ev_pthsem_stop;
-
 static void
 pthsem_poll (EV_P_ ev_tstamp timeout)
 {
@@ -89,9 +87,8 @@ pthsem_poll (EV_P_ ev_tstamp timeout)
 
   pth_event (PTH_EVENT_SELECT | PTH_MODE_REUSE, pthsem_event, &res, fd_setsize + 1, &vec_ro, &vec_wo, NULL);
   pth_event (PTH_EVENT_RTIME | PTH_MODE_REUSE, pthsem_timeout, pth_time (tv.tv_sec, tv.tv_usec));
-  pth_event_concat (pthsem_stop, pthsem_event, pthsem_timeout, NULL);
-  pth_wait (pthsem_stop);
-  pth_event_isolate (pthsem_event);
+  pth_event_concat (pthsem_event, pthsem_timeout, NULL);
+  pth_wait (pthsem_event);
   pth_event_isolate (pthsem_timeout);
 
   EV_ACQUIRE_CB;
@@ -136,8 +133,6 @@ pthsem_init (EV_P_ int flags)
   backend_poll    = pthsem_poll;
 
   /* dummy values, for now */
-  pth_sem_init(&ev_pthsem_stop);
-  pthsem_stop = pth_event (PTH_EVENT_SEM,&ev_pthsem_stop);
   pthsem_event = pth_event (PTH_EVENT_FD,0);
   pthsem_timeout = pth_event (PTH_EVENT_FD,0);
 
@@ -153,7 +148,6 @@ inline_size
 void
 pthsem_destroy (EV_P)
 {
-  pth_event_free (pthsem_stop, PTH_FREE_THIS);
   pth_event_free (pthsem_event, PTH_FREE_THIS);
   pth_event_free (pthsem_timeout, PTH_FREE_THIS);
 
