@@ -85,11 +85,12 @@ pthsem_poll (EV_P_ ev_tstamp timeout)
 
   fd_setsize = anfdmax < FD_SETSIZE ? anfdmax : FD_SETSIZE;
 
-  pth_event (PTH_EVENT_SELECT | PTH_MODE_REUSE, pthsem_event, &res, fd_setsize + 1, &vec_ro, &vec_wo, NULL);
-  pth_event (PTH_EVENT_RTIME | PTH_MODE_REUSE, pthsem_timeout, pth_time (tv.tv_sec, tv.tv_usec));
+  pthsem_event = pth_event (PTH_EVENT_SELECT, &res, fd_setsize + 1, &vec_ro, &vec_wo, NULL);
+  pthsem_timeout = pth_event (PTH_EVENT_RTIME, pthsem_timeout, pth_time (tv.tv_sec, tv.tv_usec));
   pth_event_concat (pthsem_event, pthsem_timeout, NULL);
   pth_wait (pthsem_event);
-  pth_event_isolate (pthsem_timeout);
+  pth_event_free (pthsem_event, PTH_FREE_THIS);
+  pth_event_free (pthsem_timeout, PTH_FREE_THIS);
 
   EV_ACQUIRE_CB;
   if (expect_false (res < 0))
@@ -133,9 +134,6 @@ pthsem_init (EV_P_ int flags)
   backend_poll    = pthsem_poll;
 
   /* dummy values, for now */
-  pthsem_event = pth_event (PTH_EVENT_FD,0);
-  pthsem_timeout = pth_event (PTH_EVENT_FD,0);
-
   vec_ri  = ev_malloc (sizeof (fd_set)); FD_ZERO ((fd_set *)vec_ri);
   vec_ro  = ev_malloc (sizeof (fd_set));
   vec_wi  = ev_malloc (sizeof (fd_set)); FD_ZERO ((fd_set *)vec_wi);
@@ -148,9 +146,6 @@ inline_size
 void
 pthsem_destroy (EV_P)
 {
-  pth_event_free (pthsem_event, PTH_FREE_THIS);
-  pth_event_free (pthsem_timeout, PTH_FREE_THIS);
-
   ev_free (vec_ri);
   ev_free (vec_ro);
   ev_free (vec_wi);

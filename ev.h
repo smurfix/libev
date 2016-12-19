@@ -40,10 +40,12 @@
 #ifndef EV_H_
 #define EV_H_
 
+#if 0
 #define EV_EMBED_ENABLE 0
 #define EV_FORK_ENABLE 0
 #define EV_CHILD_ENABLE 0
 #define EV_MULTIPLICITY 0
+#endif
 
 #ifdef __cplusplus
 # define EV_CPP(x) x
