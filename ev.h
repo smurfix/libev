@@ -40,6 +40,11 @@
 #ifndef EV_H_
 #define EV_H_
 
+#define EV_EMBED_ENABLE 0
+#define EV_FORK_ENABLE 0
+#define EV_CHILD_ENABLE 0
+#define EV_MULTIPLICITY 0
+
 #ifdef __cplusplus
 # define EV_CPP(x) x
 # if __cplusplus >= 201103L
