@@ -85,7 +85,7 @@ pthsem_poll (EV_P_ ev_tstamp timeout)
 
   fd_setsize = anfdmax < FD_SETSIZE ? anfdmax : FD_SETSIZE;
 
-  pth_event (PTH_EVENT_SELECT | PTH_MODE_REUSE, pthsem_event, &res, fd_setsize + 1, &vec_ro, &vec_wo, NULL);
+  pth_event (PTH_EVENT_SELECT | PTH_MODE_REUSE, pthsem_event, &res, fd_setsize + 1, vec_ro, vec_wo, NULL);
   pth_event (PTH_EVENT_RTIME | PTH_MODE_REUSE, pthsem_timeout, pth_time (tv.tv_sec, tv.tv_usec));
   pth_event_concat (pthsem_event, pthsem_timeout, NULL);
   pth_wait (pthsem_event);
